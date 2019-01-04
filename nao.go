@@ -1,9 +1,11 @@
 package main
 
-import "bufio"
-import "fmt"
-import "os"
-import "time"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"time"
+)
 
 func add_card(deck string) {
 	// read front and back from the user
@@ -11,11 +13,11 @@ func add_card(deck string) {
 
 	fmt.Printf("\033[1mFront:\033[0m ")
 	front, _ := reader.ReadString('\n')
-	front = front[:len(front) - 1]
+	front = front[:len(front)-1]
 
 	fmt.Printf("\033[1mBack:\033[0m  ")
 	back, _ := reader.ReadString('\n')
-	back = back[:len(back) - 1]
+	back = back[:len(back)-1]
 
 	// get toadys date in unix time
 	today := time.Now().Unix()
@@ -38,13 +40,13 @@ func parse_arguments() {
 	}
 
 	// add command
-	if (args[0] == "add") {
-		if (len(args) < 2) {
+	if args[0] == "add" {
+		if len(args) < 2 {
 			fmt.Printf("No argument: add need a deck as an argument\n")
 			os.Exit(1)
 		}
-		
-		if (len(args) > 2) {
+
+		if len(args) > 2 {
 			fmt.Printf("\033[1;33mWarning:\033[0m extra arguments will be ignored\n")
 		}
 
