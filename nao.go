@@ -7,6 +7,15 @@ import (
 	"time"
 )
 
+type Flashcard struct {
+	front       string
+	back        string
+	e_factor    float64
+	due_date    int
+	repetitions int
+	interval    int
+}
+
 func add_card(deck string) {
 	// read front and back from the user
 	reader := bufio.NewReader(os.Stdin)
