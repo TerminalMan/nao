@@ -5,7 +5,7 @@ A command line spaced repetition flashcard program that uses the SM2 algorithm. 
 Stuff to do before the next (first) release.
 
 ## Features
-- [ ] `add` command
+- [X] `add` command
 - [ ] `review` command
 - [ ] `cram` command
 - [ ] `info` command
