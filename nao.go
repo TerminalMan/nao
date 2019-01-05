@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -116,15 +117,60 @@ func get_deckn(deck string) int {
 	return i
 }
 
+// study card and return the updated (or not, if cramming) card
+func study_card(card Flashcard, cram bool) Flashcard {
+	// show the card and gather answer quality
+	fmt.Printf("\033[1mFront:\033[0m %s\n", card.front)
+	getkey()
+	fmt.Printf("\033[1mBack:\033[0m  %s\n", card.back)
+	fmt.Printf("\033[1mEvaluate your answer:\033[0m \033[0;31m0 1 \033[0;33m2 3 \033[0;32m4 5\033[0m\n")
+
+	quality := getkey() - '0'
+	for quality > 5 {
+		quality = getkey() - '0'
+	}
+
+	// update e-factor
+	card.efactor += 0.1 - (5-float64(quality))*(0.08+(5-float64(quality))*0.02)
+	if card.efactor > 2.5 {
+		card.efactor = 2.5
+	} else if card.efactor < 1.3 {
+		card.efactor = 1.3
+	}
+
+	// get today's date. Update due date, interval and repetition number
+	// according to the quality obtained
+	today := int(time.Now().Unix())
+	today -= today % 86400
+
+	if quality >= 3 {
+		if card.repetitions == 0 {
+			card.interval = 1
+		} else if card.repetitions == 1 {
+			card.interval = 2
+		} else {
+			card.interval = int(math.Floor(float64(card.interval) * card.efactor))
+		}
+
+		card.repetitions += 1
+		card.duedate = today + card.interval*86400
+	} else {
+		card.repetitions = 0
+		card.interval = 0
+		card.duedate = today
+	}
+
+	return card
+}
+
 /* cram true: cram the given deck (just study every card)
  * cram false: review the given deck (study due cards updating their
  * local data, also repeat until every card has received a passing score) */
 func study_deck(deck string, cram bool) {
 	// make the support array
+	rand.Seed(time.Now().Unix())
 	deckn := get_deckn(deck)
 	decka := rand.Perm(deckn)
-
-	fmt.Println(decka)
 
 	// get today's date
 	today := int(time.Now().Unix())
@@ -138,7 +184,8 @@ func study_deck(deck string, cram bool) {
 
 		if card.duedate <= today || cram {
 			// review/cram deck
-
+			card = study_card(card, cram)
+			// write card to file
 		}
 
 		if card.duedate <= today {
