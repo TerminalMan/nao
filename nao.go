@@ -98,7 +98,7 @@ func getkey(prompt string) []byte {
 }
 
 // get the number of cards in the given deck
-func get_deck_n(deck string) int {
+func get_deckn(deck string) int {
 	// set up the file for reading through a scanner
 	deck_f, err := os.Open(deck)
 	if err != nil {
