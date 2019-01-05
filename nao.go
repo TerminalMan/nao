@@ -83,13 +83,12 @@ func get_card(deck string, n int) Flashcard {
 }
 
 // read a single character from stin without a need for the enter key
-func getkey(prompt string) byte {
+func getkey() byte {
 	// block terminal buffering
 	exec.Command("stty", "-F", "/dev/tty", "cbreak").Run()
 	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
 
 	// get the character
-	fmt.Printf("%s", prompt)
 	var c []byte = make([]byte, 1)
 	os.Stdin.Read(c)
 
