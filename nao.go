@@ -163,6 +163,54 @@ func study_card(card Flashcard, cram bool) Flashcard {
 	return card
 }
 
+// write the card to the file in the right position
+func write_card(deck string, card Flashcard, n int) {
+	// set up the file for reading through a scanner
+	deck_f, err := os.Open(deck)
+	if err != nil {
+		fmt.Printf("\033[1;31mError:\033[0m no \"%s\" deck found\n", deck)
+		os.Exit(1)
+	}
+	defer deck_f.Close()
+	deck_s := bufio.NewScanner(deck_f)
+
+	// set up a temporary file to write to
+	tmpdeck_f, _ := os.Create("tmpdeck")
+	defer tmpdeck_f.Close()
+
+	// copy lines to tmpdeck until the line of interest
+	for i := 0; i < n; i++ {
+		deck_s.Scan()
+		fmt.Fprintf(tmpdeck_f, "%s\n", deck_s.Text())
+	}
+
+	// insert the updated line to the tmpdeck
+	deck_s.Scan()
+	fmt.Fprintf(tmpdeck_f, "%s;", card.front)
+	fmt.Fprintf(tmpdeck_f, "%s;", card.back)
+	fmt.Fprintf(tmpdeck_f, "%f;", card.efactor)
+	fmt.Fprintf(tmpdeck_f, "%d;", card.duedate)
+	fmt.Fprintf(tmpdeck_f, "%d;", card.repetitions)
+	fmt.Fprintf(tmpdeck_f, "%d\n", card.interval)
+
+	// copy the remaining lines to the tmpdeck
+	for deck_s.Scan() {
+		fmt.Fprintf(tmpdeck_f, "%s\n", deck_s.Text())
+	}
+
+	// copy the tmpdeck to the actual deck
+	tmpdeck_f, _ = os.Open("tmpdeck")
+	defer tmpdeck_f.Close()
+	tmpdeck_s := bufio.NewScanner(tmpdeck_f)
+
+	deck_f, _ = os.Create(deck)
+	defer deck_f.Close()
+
+	for tmpdeck_s.Scan() {
+		fmt.Fprintf(deck_f, "%s\n", tmpdeck_s.Text())
+	}
+}
+
 /* cram true: cram the given deck (just study every card)
  * cram false: review the given deck (study due cards updating their
  * local data, also repeat until every card has received a passing score) */
@@ -185,7 +233,7 @@ func study_deck(deck string, cram bool) {
 		if card.duedate <= today || cram {
 			// review/cram deck
 			card = study_card(card, cram)
-			// write card to file
+			write_card(deck, card, decka[i])
 		}
 
 		if card.duedate <= today {
@@ -254,7 +302,7 @@ func main() {
 	// get into the decks directory
 	os.Chdir("/home/grastello/flashcards")
 
-	parse_arguments()
+	parse_argumentst
 
 	os.Exit(0)
 }
