@@ -83,21 +83,6 @@ func get_card(deck string, n int) Flashcard {
 	return Flashcard{front, back, efactor, duedate, repetitions, interval}
 }
 
-// read a single character from stin without a need for the enter key
-func getkey() byte {
-	// block terminal buffering
-	exec.Command("stty", "-F", "/dev/tty", "cbreak").Run()
-	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
-
-	// get the character
-	var c []byte = make([]byte, 1)
-	os.Stdin.Read(c)
-
-	// reset terminal properties and return
-	exec.Command("stty", "-F", "/dev/tty", "sane").Run()
-	return c[0]
-}
-
 // get the number of cards in the given deck
 func get_deckn(deck string) int {
 	// set up the file for reading through a scanner
@@ -115,6 +100,21 @@ func get_deckn(deck string) int {
 	}
 
 	return i
+}
+
+// read a single character from stin without a need for the enter key
+func getkey() byte {
+	// block terminal buffering
+	exec.Command("stty", "-F", "/dev/tty", "cbreak").Run()
+	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
+
+	// get the character
+	var c []byte = make([]byte, 1)
+	os.Stdin.Read(c)
+
+	// reset terminal properties and return
+	exec.Command("stty", "-F", "/dev/tty", "sane").Run()
+	return c[0]
 }
 
 // study card and return the updated (or not, if cramming) card
