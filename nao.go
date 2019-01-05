@@ -97,6 +97,25 @@ func getkey(prompt string) []byte {
 	return c
 }
 
+// get the number of cards in the given deck
+func get_deck_n(deck string) int {
+	// set up the file for reading through a scanner
+	deck_f, err := os.Open(deck)
+	if err != nil {
+		fmt.Printf("\033[1;31mError:\033[0m no \"%s\" deck found\n", deck)
+		os.Exit(1)
+	}
+	defer deck_f.Close()
+	deck_s := bufio.NewScanner(deck_f)
+
+	i := 0
+	for deck_s.Scan() {
+		i++
+	}
+
+	return i
+}
+
 func add_card(deck string) {
 	// read front and back from the user
 	reader := bufio.NewReader(os.Stdin)
