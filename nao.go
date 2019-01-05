@@ -18,22 +18,6 @@ type Flashcard struct {
 	interval    int
 }
 
-// read a single character from stin without a need for the enter key
-func getkey(prompt string) []byte {
-	// block terminal buffering
-	exec.Command("stty", "-F", "/dev/tty", "cbreak").Run()
-	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
-
-	// get the character
-	fmt.Printf("%s", prompt)
-	var c []byte = make([]byte, 1)
-	os.Stdin.Read(c)
-
-	// reset terminal properties and return
-	exec.Command("stty", "-F", "/dev/tty", "sane").Run()
-	return c
-}
-
 // get then n-th flashcard of the given deck
 func get_card(deck string, n int) Flashcard {
 	// set up the file for reading through a scanner
@@ -95,6 +79,22 @@ func get_card(deck string, n int) Flashcard {
 	interval, _ := strconv.Atoi(interval_s)
 
 	return Flashcard{front, back, efactor, duedate, repetitions, interval}
+}
+
+// read a single character from stin without a need for the enter key
+func getkey(prompt string) []byte {
+	// block terminal buffering
+	exec.Command("stty", "-F", "/dev/tty", "cbreak").Run()
+	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
+
+	// get the character
+	fmt.Printf("%s", prompt)
+	var c []byte = make([]byte, 1)
+	os.Stdin.Read(c)
+
+	// reset terminal properties and return
+	exec.Command("stty", "-F", "/dev/tty", "sane").Run()
+	return c
 }
 
 func add_card(deck string) {
