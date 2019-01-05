@@ -83,7 +83,7 @@ func get_card(deck string, n int) Flashcard {
 }
 
 // read a single character from stin without a need for the enter key
-func getkey(prompt string) []byte {
+func getkey(prompt string) byte {
 	// block terminal buffering
 	exec.Command("stty", "-F", "/dev/tty", "cbreak").Run()
 	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
@@ -95,7 +95,7 @@ func getkey(prompt string) []byte {
 
 	// reset terminal properties and return
 	exec.Command("stty", "-F", "/dev/tty", "sane").Run()
-	return c
+	return c[0]
 }
 
 // get the number of cards in the given deck
