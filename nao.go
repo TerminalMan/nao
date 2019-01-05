@@ -293,6 +293,19 @@ func parse_arguments() {
 		os.Exit(0)
 	}
 
+	// review commands
+	if args[0] == "review" {
+		if len(args) < 2 {
+			fmt.Printf("No argument: review need a deck as an argument\n")
+			os.Exit(1)
+		}
+
+		// HERE HANDLE MULTIPLE ARGUMENTS
+
+		study_deck(args[1], false)
+		os.Exit(0)
+	}
+
 	// if nothing works
 	fmt.Printf("Unrecognized command \"%s\"\n", args[0])
 	os.Exit(1)
@@ -302,7 +315,7 @@ func main() {
 	// get into the decks directory
 	os.Chdir("/home/grastello/flashcards")
 
-	parse_argumentst
+	parse_arguments()
 
 	os.Exit(0)
 }
