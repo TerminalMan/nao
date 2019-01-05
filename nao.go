@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"strconv"
@@ -114,6 +115,41 @@ func get_deckn(deck string) int {
 	}
 
 	return i
+}
+
+/* cram true: cram the given deck (just study every card)
+ * cram false: review the given deck (study due cards updating their
+ * local data, also repeat until every card has received a passing score) */
+func study_deck(deck string, cram bool) {
+	// make the support array
+	deckn := get_deckn(deck)
+	decka := rand.Perm(deckn)
+
+	fmt.Println(decka)
+
+	// get today's date
+	today := int(time.Now().Unix())
+	today -= today % 86400
+
+	// set failed variable
+	fail := false
+
+	for i := 0; i < deckn; i++ {
+		card := get_card(deck, decka[i])
+
+		if card.duedate <= today || cram {
+			// review/cram deck
+
+		}
+
+		if card.duedate <= today {
+			fail = true
+		}
+	}
+
+	if fail {
+		study_deck(deck, cram)
+	}
 }
 
 func add_card(deck string) {
