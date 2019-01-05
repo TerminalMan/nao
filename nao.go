@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -14,6 +15,69 @@ type Flashcard struct {
 	due_date    int
 	repetitions int
 	interval    int
+}
+
+// get then n-th flashcard of the given deck
+func get_card(deck string, n int) Flashcard {
+	// set up the file for reading through a scanner
+	deck_f, err := os.Open(deck)
+	if err != nil {
+		fmt.Printf("\033[1;31mError:\033[0m no \"%s\" deck found\n", deck)
+		os.Exit(1)
+	}
+	defer deck_f.Close()
+	deck_s := bufio.NewScanner(deck_f)
+
+	// skips to the line that has the wanted flashcard's data
+	for i := 0; i <= n; i++ {
+		deck_s.Scan()
+	}
+	line := deck_s.Text()
+
+	// extract front
+	var i int
+	var front string
+	for i = 0; line[i] != ';'; i++ {
+		front += string(line[i])
+	}
+	line = line[i+1:]
+
+	// extract back
+	var back string
+	for i = 0; line[i] != ';'; i++ {
+		back += string(line[i])
+	}
+	line = line[i+1:]
+
+	// extract e-factor
+	var efactor_s string
+	for i = 0; line[i] != ';'; i++ {
+		efactor_s += string(line[i])
+	}
+	line = line[i+1:]
+	efactor, _ := strconv.ParseFloat(efactor_s, 64)
+
+	// extract due date
+	var duedate_s string
+	for i = 0; line[i] != ';'; i++ {
+		duedate_s += string(line[i])
+	}
+	line = line[i+1:]
+	duedate, _ := strconv.Atoi(duedate_s)
+
+	// extract repetitions
+	var repetitions_s string
+	for i = 0; line[i] != ';'; i++ {
+		repetitions_s += string(line[i])
+	}
+	line = line[i+1:]
+	repetitions, _ := strconv.Atoi(repetitions_s)
+
+	// extract interval
+	interval_s := line
+	interval, _ := strconv.Atoi(interval_s)
+
+	return Flashcard{front, back, efactor, duedate, repetitions, interval}
 }
 
 func add_card(deck string) {
