@@ -11,8 +11,8 @@ import (
 type Flashcard struct {
 	front       string
 	back        string
-	e_factor    float64
-	due_date    int
+	efactor     float64
+	duedate     int
 	repetitions int
 	interval    int
 }
