@@ -265,9 +265,9 @@ func write_card(deck string, card Flashcard, n int) {
 	}
 }
 
-/* cram true: cram the given deck (just study every card)
- * cram false: review the given deck (study due cards updating their
- * local data, also repeat until every card has received a passing score) */
+// cram true: cram the given deck (just study every card)
+// cram false: review the given deck (study due cards updating their
+// local data, also repeat until every card has received a passing score)
 func study_deck(deck string, cram bool) {
 	// make the support array
 	rand.Seed(time.Now().Unix())
