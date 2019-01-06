@@ -120,21 +120,39 @@ func getkey() byte {
 // print function designed for handling long flashcards in a nice way
 // returns the number of lines printed
 func pretty_print(s1, s2 string) int {
+	lines := 0
+	s1n := len(s1)
+
 	fmt.Printf("\033[1m%s\033[0m", s1)
 
-	if len(s2) <= 33-len(s1) {
+	if len(s2) <= LINELENGTH-s1n {
 		fmt.Printf("%s\n", s2)
+		s2 = ""
 	} else {
-		ss := s2[:33-len(s1)]
-		s2 = s2[33-len(s1):]
+		ss := s2[:LINELENGTH-s1n]
+		s2 = s2[LINELENGTH-s1n:]
 		fmt.Printf("%s\n", ss)
 	}
+	lines += 1
 
-	fmt.Printf("%s\n", s2)
+	for len(s2) > 0 {
+		for i := 0; i < s1n; i++ {
+			fmt.Printf(" ")
+		}
 
-	// 35 line length
+		if len(s2) <= LINELENGTH-s1n {
+			fmt.Printf("%s\n", s2)
+			s2 = ""
+		} else {
+			ss := s2[:LINELENGTH-s1n]
+			s2 = s2[LINELENGTH-s1n:]
+			fmt.Printf("%s\n", ss)
+		}
 
-	return 1
+		lines += 1
+	}
+
+	return lines
 }
 
 // study card and return the updated (or not, if cramming) card
