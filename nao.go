@@ -11,6 +11,9 @@ import (
 	"time"
 )
 
+var INTERVAL_0 int = 1
+var INTERVAL_1 int = 2
+
 type Flashcard struct {
 	front       string
 	back        string
@@ -145,9 +148,9 @@ func study_card(card Flashcard, cram bool) Flashcard {
 
 	if quality >= 3 {
 		if card.repetitions == 0 {
-			card.interval = 1
+			card.interval = INTERVAL_0
 		} else if card.repetitions == 1 {
-			card.interval = 2
+			card.interval = INTERVAL_1
 		} else {
 			card.interval = int(math.Floor(float64(card.interval) * card.efactor))
 		}
