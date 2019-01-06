@@ -300,9 +300,10 @@ func parse_arguments() {
 			os.Exit(1)
 		}
 
-		// HERE HANDLE MULTIPLE ARGUMENTS
+		for i := 1; i < len(args); i++ {
+			study_deck(args[i], false)
+		}
 
-		study_deck(args[1], false)
 		os.Exit(0)
 	}
 
