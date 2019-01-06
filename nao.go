@@ -155,6 +155,19 @@ func pretty_print(s1, s2 string) int {
 	return lines
 }
 
+// clear n lines of output
+func clear_lines(n int) {
+	for i := 0; i < n; i++ {
+		fmt.Printf("\033[1A\r")
+
+		for j := 0; j < LINELENGTH; j++ {
+			fmt.Printf(" ")
+		}
+	}
+
+	fmt.Printf("\r")
+}
+
 // study card and return the updated (or not, if cramming) card
 func study_card(card Flashcard, cram bool) Flashcard {
 	// show the card and gather answer quality
