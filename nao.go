@@ -40,42 +40,38 @@ func get_card(deck string, n int) Flashcard {
 	}
 	line := deck_s.Text()
 
-	// extract front
 	var i int
-	var front string
+
+	// extract front
 	for i = 0; line[i] != ';'; i++ {
-		front += string(line[i])
 	}
+	front := line[:i]
 	line = line[i+1:]
 
 	// extract back
-	var back string
 	for i = 0; line[i] != ';'; i++ {
-		back += string(line[i])
 	}
+	back := line[:i]
 	line = line[i+1:]
 
 	// extract e-factor
-	var efactor_s string
 	for i = 0; line[i] != ';'; i++ {
-		efactor_s += string(line[i])
 	}
+	efactor_s := line[:i]
 	line = line[i+1:]
 	efactor, _ := strconv.ParseFloat(efactor_s, 64)
 
 	// extract due date
-	var duedate_s string
 	for i = 0; line[i] != ';'; i++ {
-		duedate_s += string(line[i])
 	}
+	duedate_s := line[:i]
 	line = line[i+1:]
 	duedate, _ := strconv.Atoi(duedate_s)
 
 	// extract repetitions
-	var repetitions_s string
 	for i = 0; line[i] != ';'; i++ {
-		repetitions_s += string(line[i])
 	}
+	repetitions_s := line[:i]
 	line = line[i+1:]
 	repetitions, _ := strconv.Atoi(repetitions_s)
 
@@ -118,6 +114,26 @@ func getkey() byte {
 	// reset terminal properties and return
 	exec.Command("stty", "-F", "/dev/tty", "sane").Run()
 	return c[0]
+}
+
+// print function designed for handling long flashcards in a nice way
+// returns the number of lines printed
+func pretty_print(s1, s2 string) int {
+	fmt.Printf("\033[1m%s\033[0m", s1)
+
+	if len(s2) <= 33-len(s1) {
+		fmt.Printf("%s\n", s2)
+	} else {
+		ss := s2[:33-len(s1)]
+		s2 = s2[33-len(s1):]
+		fmt.Printf("%s\n", ss)
+	}
+
+	fmt.Printf("%s\n", s2)
+
+	// 35 line length
+
+	return 1
 }
 
 // study card and return the updated (or not, if cramming) card
@@ -319,7 +335,12 @@ func main() {
 	// get into the decks directory
 	os.Chdir("/home/grastello/flashcards")
 
-	parse_arguments()
+	//parse_arguments()
+	//pretty_print("Front: ", "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd")
+	//fmt.Printf("\033[1mEvaluate your answer:\033[0m \033[0;31m0 1 \033[0;33m2 3 \033[0;32m4 5\033[0m\n")
+
+	card := get_card("t3", 1)
+	fmt.Println(card)
 
 	os.Exit(0)
 }
