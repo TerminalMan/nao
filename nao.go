@@ -171,15 +171,18 @@ func clear_lines(n int) {
 // study card and return the updated (or not, if cramming) card
 func study_card(card Flashcard, cram bool) Flashcard {
 	// show the card and gather answer quality
-	fmt.Printf("\033[1mFront:\033[0m %s\n", card.front)
+	lines := pretty_print("Front: ", card.front)
 	getkey()
-	fmt.Printf("\033[1mBack:\033[0m  %s\n", card.back)
+	lines += pretty_print("Back:  ", card.back)
 	fmt.Printf("\033[1mEvaluate your answer:\033[0m \033[0;31m0 1 \033[0;33m2 3 \033[0;32m4 5\033[0m\n")
+	lines += 1
 
 	quality := getkey() - '0'
 	for quality > 5 {
 		quality = getkey() - '0'
 	}
+
+	clear_lines(lines)
 
 	// update e-factor
 	card.efactor += 0.1 - (5-float64(quality))*(0.08+(5-float64(quality))*0.02)
@@ -295,6 +298,8 @@ func study_deck(deck string, cram bool) {
 	if fail {
 		study_deck(deck, cram)
 	}
+
+	fmt.Printf("You have finished studying \033[1m%s\033[0m] for today!\n")
 }
 
 func add_card(deck string) {
