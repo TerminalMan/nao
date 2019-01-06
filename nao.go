@@ -372,12 +372,7 @@ func main() {
 	// get into the decks directory
 	os.Chdir("/home/grastello/flashcards")
 
-	//parse_arguments()
-	//pretty_print("Front: ", "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd")
-	//fmt.Printf("\033[1mEvaluate your answer:\033[0m \033[0;31m0 1 \033[0;33m2 3 \033[0;32m4 5\033[0m\n")
-
-	card := get_card("t3", 1)
-	fmt.Println(card)
+	parse_arguments()
 
 	os.Exit(0)
 }
