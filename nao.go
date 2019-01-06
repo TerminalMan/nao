@@ -281,7 +281,7 @@ func parse_arguments() {
 	// add command
 	if args[0] == "add" {
 		if len(args) < 2 {
-			fmt.Printf("No argument: add need a deck as an argument\n")
+			fmt.Printf("\033[1;31mError:\033[0m the add command need an argument\n")
 			os.Exit(1)
 		}
 
@@ -296,7 +296,7 @@ func parse_arguments() {
 	// review commands
 	if args[0] == "review" {
 		if len(args) < 2 {
-			fmt.Printf("No argument: review need a deck as an argument\n")
+			fmt.Printf("\033[1;31mError:\033[0m review need an argument\n")
 			os.Exit(1)
 		}
 
@@ -307,7 +307,7 @@ func parse_arguments() {
 	}
 
 	// if nothing works
-	fmt.Printf("Unrecognized command \"%s\"\n", args[0])
+	fmt.Printf("\033[1;31mError:\033[0m unrecognized command \"%s\"\n", args[0])
 	os.Exit(1)
 }
 
