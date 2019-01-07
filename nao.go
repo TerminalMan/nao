@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"os/user"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -447,6 +448,66 @@ func parse_arguments() {
 	os.Exit(1)
 }
 
+// read the config file and set up variables accordingly, returing error when
+// unxpected things happen
+func parse_config(configfile_f *os.File) {
+	configfile_s := bufio.NewScanner(configfile_f)
+	i := 0
+
+	for configfile_s.Scan() {
+		i++
+		words := strings.Fields(configfile_s.Text())
+
+		if len(words) == 0 {
+			continue
+		}
+
+		switch words[0] {
+		case "interval0":
+			if len(words) == 1 {
+				fmt.Printf("\033[1;31mError:\033[0m no argument provided on line %d of naorc\n", i)
+				os.Exit(1)
+			}
+
+			INTERVAL_0, _ = strconv.Atoi(words[1])
+		case "interval1":
+			if len(words) == 1 {
+				fmt.Printf("\033[1;31mError:\033[0m no argument provided on line %d of naorc\n", i)
+				os.Exit(1)
+			}
+
+			INTERVAL_1, _ = strconv.Atoi(words[1])
+		case "linelength":
+			if len(words) == 1 {
+				fmt.Printf("\033[1;31mError:\033[0m no argument provided on line %d of naorc\n", i)
+				os.Exit(1)
+			}
+
+			// set LINELENGTH, then make it odd if even since odd linelenghts
+			// don't break wide unicode characters
+			LINELENGTH, _ = strconv.Atoi(words[1])
+			if LINELENGTH%2 == 0 {
+				LINELENGTH += 1
+			}
+		case "deckdir":
+			if len(words) == 1 {
+				fmt.Printf("\033[1;31mError:\033[0m no argument provided on line %d of naorc\n", i)
+				os.Exit(1)
+			}
+
+			if len(words) > 2 {
+				fmt.Printf("\033[1;31mError:\033[0m multiple argument provided on line %d of naorc\n", i)
+				os.Exit(1)
+			}
+
+			DECKDIR = words[1]
+		default:
+			fmt.Printf("\033[1;31mError:\033[0m unrecognized option \"%s\" on line %d of naorc\n", words[0], i)
+			os.Exit(1)
+		}
+	}
+}
+
 func init() {
 	// set default DECKDIR
 	user, _ := user.Current()
@@ -456,7 +517,7 @@ func init() {
 	configfile_f, err := os.Open(user.HomeDir + "/.config/nao/naorc")
 	if err == nil {
 		defer configfile_f.Close()
-		// parse_config(configfile_f) <- TO IMPLEMENT
+		parse_config(configfile_f)
 	}
 
 	// expand '~', check if the path is absolute then check if DECKDIR is
