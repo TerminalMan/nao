@@ -425,6 +425,20 @@ func parse_arguments() {
 		os.Exit(0)
 	}
 
+	// info command
+	if args[0] == "info" {
+		if len(args) < 2 {
+			fmt.Printf("\033[1;31mError:\033[0m info need an argument\n")
+			os.Exit(1)
+		}
+
+		for i := 1; i < len(args); i++ {
+			info_deck(args[i])
+		}
+
+		os.Exit(0)
+	}
+
 	// if nothing works
 	fmt.Printf("\033[1;31mError:\033[0m unrecognized command \"%s\"\n", args[0])
 	os.Exit(1)
