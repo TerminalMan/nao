@@ -465,7 +465,7 @@ func init() {
 	if DECKDIR[0] == '~' {
 		DECKDIR = user.HomeDir + DECKDIR[1:]
 	} else if DECKDIR[0] != '/' {
-		fmt.Printf("\033[1;31mError:\033[0m \"%s\" is not absolute\n", DECKDIR)
+		fmt.Printf("\033[1;31mError:\033[0m \"%s\" is not an absolute path; check your naorc\n", DECKDIR)
 		os.Exit(1)
 	}
 
