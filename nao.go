@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// global variables
 var INTERVAL_0 int = 1
 var INTERVAL_1 int = 2
 var LINELENGTH int = 79
