@@ -174,6 +174,16 @@ func study_card(card Flashcard, cram bool) Flashcard {
 	lines := pretty_print("Front: ", card.front)
 	getkey()
 	lines += pretty_print("Back:  ", card.back)
+
+	// if cramming wait for a key and return
+	if cram {
+		fmt.Printf("Press any key to continue...\n")
+		lines += 1
+		getkey()
+		clear_lines(lines)
+		return card
+	}
+
 	fmt.Printf("\033[1mEvaluate your answer:\033[0m \033[0;31m0 1 \033[0;33m2 3 \033[0;32m4 5\033[0m\n")
 	lines += 1
 
@@ -287,10 +297,13 @@ func study_deck(deck string, cram bool) {
 		if card.duedate <= today || cram {
 			// review/cram deck
 			card = study_card(card, cram)
-			write_card(deck, card, decka[i])
+
+			if !cram {
+				write_card(deck, card, decka[i])
+			}
 		}
 
-		if card.duedate <= today {
+		if card.duedate <= today && !cram {
 			fail = true
 		}
 	}
