@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"os/user"
 	"strconv"
 	"time"
 )
@@ -15,7 +16,7 @@ import (
 var INTERVAL_0 int = 1
 var INTERVAL_1 int = 2
 var LINELENGTH int = 79
-var DECKDIR string = "/home/grastello/flashcards"
+var DECKDIR string = ""
 
 type Flashcard struct {
 	front       string
@@ -446,10 +447,41 @@ func parse_arguments() {
 	os.Exit(1)
 }
 
-func main() {
-	// get into the decks directory
-	os.Chdir(DECKDIR)
+func init() {
+	// set default DECKDIR
+	user, _ := user.Current()
+	DECKDIR = user.HomeDir + "/flashcards"
 
+	// open config file, if any the parse it and set the variables accordingly
+	configfile_f, err := os.Open(user.HomeDir + "/.config/nao/naorc")
+	if err == nil {
+		defer configfile_f.Close()
+		// parse_config(configfile_f) <- TO IMPLEMENT
+	}
+
+	// expand '~', check if the path is absolute then check if DECKDIR is
+	// a directory and if everything is ok change current directory
+	// to DECKDIR
+	if DECKDIR[0] == '~' {
+		DECKDIR = user.HomeDir + DECKDIR[1:]
+	} else if DECKDIR[0] != '/' {
+		fmt.Printf("\033[1;31mError:\033[0m \"%s\" is not absolute\n", DECKDIR)
+		os.Exit(1)
+	}
+
+	deckdirstats, err := os.Stat(DECKDIR)
+	if err != nil {
+		fmt.Printf("\033[1;31mError:\033[0m \"%s\" no such directory\n", DECKDIR)
+		os.Exit(1)
+	} else if deckdirstats.IsDir() == false {
+		fmt.Printf("\033[1;31mError:\033[0m \"%s\" is not a directory\n", DECKDIR)
+		os.Exit(1)
+	}
+
+	os.Chdir(DECKDIR)
+}
+
+func main() {
 	parse_arguments()
 
 	os.Exit(0)
