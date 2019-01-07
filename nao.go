@@ -364,7 +364,7 @@ func parse_arguments() {
 		os.Exit(0)
 	}
 
-	// review commands
+	// review command
 	if args[0] == "review" {
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m review need an argument\n")
@@ -378,7 +378,7 @@ func parse_arguments() {
 		os.Exit(0)
 	}
 
-	// cram commands
+	// cram command
 	if args[0] == "cram" {
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m cram need an argument\n")
