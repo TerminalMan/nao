@@ -310,6 +310,8 @@ func study_deck(deck string, cram bool) {
 
 	if fail {
 		study_deck(deck, cram)
+	} else if cram {
+		fmt.Printf("You have finished cramming \033[1m%s\033[0m!\n", deck)
 	} else {
 		fmt.Printf("You have finished studying \033[1m%s\033[0m for today!\n", deck)
 	}
