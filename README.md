@@ -7,7 +7,7 @@ Stuff to do before the next (first) release.
 ## Features
 - [X] `add` command
 - [X] `review` command
-- [ ] `cram` command
+- [X] `cram` command
 - [ ] `info` command
 - [ ] configuration file
 

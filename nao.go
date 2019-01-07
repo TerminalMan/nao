@@ -378,6 +378,20 @@ func parse_arguments() {
 		os.Exit(0)
 	}
 
+	// cram commands
+	if args[0] == "cram" {
+		if len(args) < 2 {
+			fmt.Printf("\033[1;31mError:\033[0m cram need an argument\n")
+			os.Exit(1)
+		}
+
+		for i := 1; i < len(args); i++ {
+			study_deck(args[i], true)
+		}
+
+		os.Exit(0)
+	}
+
 	// if nothing works
 	fmt.Printf("\033[1;31mError:\033[0m unrecognized command \"%s\"\n", args[0])
 	os.Exit(1)
