@@ -15,6 +15,7 @@ import (
 var INTERVAL_0 int = 1
 var INTERVAL_1 int = 2
 var LINELENGTH int = 79
+var DECKDIR string = "/home/grastello/flashcards"
 
 type Flashcard struct {
 	front       string
@@ -447,7 +448,7 @@ func parse_arguments() {
 
 func main() {
 	// get into the decks directory
-	os.Chdir("/home/grastello/flashcards")
+	os.Chdir(DECKDIR)
 
 	parse_arguments()
 
