@@ -340,6 +340,39 @@ func add_card(deck string) {
 	fmt.Fprintf(deck_f, "%s;%s;2.5;%d;0;0\n", front, back, today)
 }
 
+func info_deck(deck string) {
+	deckn := get_deckn(deck)
+	dueToday := 0
+	dueTomorrow := 0
+	averageEfactor := 0.0
+
+	// get today's date
+	today := int(time.Now().Unix())
+	today -= today % 86400
+
+	// get data
+	for i := 0; i < deckn; i++ {
+		card := get_card(deck, i)
+
+		averageEfactor += card.efactor
+		if card.duedate <= today {
+			dueToday += 1
+		} else if card.duedate == today+86400 {
+			dueTomorrow += 1
+		}
+	}
+
+	averageEfactor /= float64(deckn)
+	overallEase := int(math.Floor(((averageEfactor-2.5)/1.3 + 1) * 100))
+
+	// print data
+	fmt.Printf("\033[1m%s\033[0m's infos\n", deck)
+	pretty_print("Card total:   ", strconv.Itoa(deckn))
+	pretty_print("Overall ease: ", strconv.Itoa(overallEase))
+	pretty_print("Due today:    ", strconv.Itoa(dueToday))
+	pretty_print("Due tomorrow: ", strconv.Itoa(dueTomorrow))
+}
+
 func parse_arguments() {
 	args := os.Args[1:]
 
