@@ -4,8 +4,6 @@ nao \- cli space repetition flashcard program
 .SH SYNOPSIS
 .B nao
 \fIcommand\fR [\fIDECK\fR]
-.SH DESCRIPTION
-Some description of the program
 .SH COMMANDS
 Underlined arguments to the following commands are mandatory. Square brackets represent that multiple arguments can be fed to the command.
 .TP
@@ -18,11 +16,27 @@ Review [\fIDECK\fR] in the given order.
 \fBcram\fR [\fIDECK\fR]
 Cram (study all flashcards) [\fIDECK\fR] in the given order.
 .TP
-\fBinfo\fR \fIDECK\fR
-Display informations about \fIDECK\fR.
+\fBinfo\fR [\fIDECK\fR]
+Display informations about [\fIDECK\fR].
 .SH CONFIG
-Notes on the config file.
-.SH AUTHOR
-Written by Gabriele Rastello.
+Nao is configured through the ~/.config/nao/naorc file. Each line of the naorc file must be composed of an option followed by an argument. White lines will be ignored and any error while reading the config file should be reported by Nao. Below is a list of the configurable options; "number" refer to an integer, "string" to a string of text not containing whitespace.
+.TP
+\fBinterval0\fR \fInumber\fR
+Interval of days from first correct review of a card to the second. The default value is 1.
+.TP
+\fBinterval1\fR \fInumber\fR
+Interval of days from second correct review of a card to the third. The default value is 2.
+.TP
+\fBlinelength\fR \fInumber\fR
+Number of characters before linebreak. It must be an odd number, if even Nao will add 1 to it. Default value 79.
+.TP
+\fBdeckdir\fR \fIstring\fR
+The directory in which your decks are. Nao can expand '~' to the home directory of the current user. Default value is "~/flashcards". Please note that if the deckdir does not exists you'll have to create it.
+.P
+Settings will ignore arguments after the first one.
+.SH KNOWN ISSUES
+Since arguments after the first one in the config file are ignored then you can't store decks in a directory whose path include one or more whitespaces.
 .SH REPORTING BUGS
 Github repository: <https://github.com/gRastello/nao>
+.SH AUTHOR
+Written by Gabriele Rastello.
