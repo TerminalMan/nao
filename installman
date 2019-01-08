@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cp man/nao.1 /usr/local/man/man1/nao.1
