@@ -495,12 +495,15 @@ func parse_config(configfile_f *os.File) {
 				os.Exit(1)
 			}
 
-			if len(words) > 2 {
-				fmt.Printf("\033[1;31mError:\033[0m multiple argument provided on line %d of naorc\n", i)
-				os.Exit(1)
+			// get everything after the deckdir option and set that as the DECKDIR
+			j := 0
+			for j = 0; j < len(configfile_s.Text()); j++ {
+				if configfile_s.Text()[j] == ' ' {
+					break
+				}
 			}
 
-			DECKDIR = words[1]
+			DECKDIR = configfile_s.Text()[j+1:]
 		default:
 			fmt.Printf("\033[1;31mError:\033[0m unrecognized option \"%s\" on line %d of naorc\n", words[0], i)
 			os.Exit(1)
