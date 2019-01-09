@@ -372,7 +372,7 @@ func info_deck(deck string) {
 	// print data
 	fmt.Printf("\033[1m%s\033[0m's infos\n", deck)
 	pretty_print("Card total:   ", strconv.Itoa(deckn))
-	pretty_print("Overall ease: ", strconv.Itoa(overallEase))
+	pretty_print("Overall ease: ", strconv.Itoa(overallEase)+"/100")
 	pretty_print("Due today:    ", strconv.Itoa(dueToday))
 	pretty_print("Due tomorrow: ", strconv.Itoa(dueTomorrow))
 }
