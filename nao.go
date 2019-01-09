@@ -382,7 +382,7 @@ func parse_arguments() {
 
 	// check if a command is given
 	if len(args) == 0 {
-		fmt.Printf("No command: expected a command\n")
+		fmt.Printf("\033[1;31mError:\033[0m no command, expected a command\n")
 		os.Exit(1)
 	}
 
