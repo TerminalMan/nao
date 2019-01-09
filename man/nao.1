@@ -31,11 +31,9 @@ Interval of days from second correct review of a card to the third. The default 
 Number of characters before linebreak. It must be an odd number, if even Nao will add 1 to it. Default value 79.
 .TP
 \fBdeckdir\fR \fIstring\fR
-The directory in which your decks are. Nao can expand '~' to the home directory of the current user. Default value is "~/flashcards". Please note that if the deckdir does not exists you'll have to create it.
+The directory in which your decks are. Nao can expand '~' to the home directory of the current user. Default value is "~/flashcards". Please note that if the deckdir does not exists you'll have to create it in order for Nao to use it.
 .P
-Settings will ignore arguments after the first one.
-.SH KNOWN ISSUES
-Since arguments after the first one in the config file are ignored then you can't store decks in a directory whose path include one or more whitespaces.
+Settings will ignore arguments after the first one but the deckdir setting will consider every character that follows it (except the whitespace right after it) to be a string representing a path; that means that you can store and use your decks in and from a directory whose path contain whitespaces.
 .SH REPORTING BUGS
 Github repository: <https://github.com/gRastello/nao>
 .SH AUTHOR
