@@ -253,6 +253,7 @@ func write_card(deck string, card Flashcard, n int) {
 	// set up a temporary file to write to
 	tmpdeck_f, _ := os.Create("tmpdeck")
 	defer tmpdeck_f.Close()
+	defer os.Remove("tmpdeck")
 
 	// copy lines to tmpdeck until the line of interest
 	for i := 0; i < n; i++ {
