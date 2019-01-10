@@ -449,6 +449,9 @@ func parse_arguments() {
 
 		for i := 1; i < len(args); i++ {
 			info_deck(args[i])
+			if i != len(args)-1 {
+				fmt.Printf("\n")
+			}
 		}
 
 		os.Exit(0)
