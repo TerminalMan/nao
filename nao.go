@@ -172,6 +172,13 @@ func clear_lines(n int) {
 	fmt.Printf("\r")
 }
 
+// get today's date in unix time
+func gettoday() int {
+	t := int(time.Now().Unix())
+	t -= t % 86400
+	return t
+}
+
 // study card and return the updated (or not, if cramming) card
 func study_card(card Flashcard, cram bool) Flashcard {
 	// show the card and gather answer quality
@@ -208,8 +215,9 @@ func study_card(card Flashcard, cram bool) Flashcard {
 
 	// get today's date. Update due date, interval and repetition number
 	// according to the quality obtained
-	today := int(time.Now().Unix())
-	today -= today % 86400
+	//today := int(time.Now().Unix())
+	//today -= today % 86400
+	today := gettoday()
 
 	if quality >= 3 {
 		if card.repetitions == 0 {
@@ -289,8 +297,9 @@ func study_deck(deck string, cram bool) {
 	decka := rand.Perm(deckn)
 
 	// get today's date
-	today := int(time.Now().Unix())
-	today -= today % 86400
+	//today := int(time.Now().Unix())
+	//today -= today % 86400
+	today := gettoday()
 
 	// set failed variable
 	fail := false
@@ -334,8 +343,9 @@ func add_card(deck string) {
 	back = back[:len(back)-1]
 
 	// get toadys date in unix time
-	today := time.Now().Unix()
-	today -= today % 86400
+	//today := time.Now().Unix()
+	//today -= today % 86400
+	today := gettoday()
 
 	// add the card to the deck, creating it if it does not exists yet
 	deck_f, _ := os.OpenFile(deck, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -351,8 +361,9 @@ func info_deck(deck string) {
 	averageEfactor := 0.0
 
 	// get today's date
-	today := int(time.Now().Unix())
-	today -= today % 86400
+	//today := int(time.Now().Unix())
+	//today -= today % 86400
+	today := gettoday()
 
 	// get data
 	for i := 0; i < deckn; i++ {
