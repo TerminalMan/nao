@@ -213,10 +213,6 @@ func studyCard(card Flashcard, cram bool) Flashcard {
 		card.eFactor = 1.3
 	}
 
-	// get today's date. Update due date, interval and repetition number
-	// according to the quality obtained
-	//today := int(time.Now().Unix())
-	//today -= today % 86400
 	today := getToday()
 
 	if quality >= 3 {
@@ -297,9 +293,6 @@ func studyDeck(deck string, cram bool) {
 	deckn := getDeckn(deck)
 	decka := rand.Perm(deckn)
 
-	// get today's date
-	//today := int(time.Now().Unix())
-	//today -= today % 86400
 	today := getToday()
 
 	// set failed variable
@@ -343,9 +336,6 @@ func addCard(deck string) {
 	back, _ := reader.ReadString('\n')
 	back = back[:len(back)-1]
 
-	// get toadys date in unix time
-	//today := time.Now().Unix()
-	//today -= today % 86400
 	today := getToday()
 
 	// add the card to the deck, creating it if it does not exists yet
@@ -361,9 +351,6 @@ func infoDeck(deck string) {
 	dueTomorrow := 0
 	averageEfactor := 0.0
 
-	// get today's date
-	//today := int(time.Now().Unix())
-	//today -= today % 86400
 	today := getToday()
 
 	// get data
