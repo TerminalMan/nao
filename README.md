@@ -14,3 +14,12 @@ $ sudo ./installman
 ```
 
 If you want to install a particular version or, for some reason, you wish to use the one in development just checkout the wanted tag/branch and run `go install` and reinstall the manpage for that version with the above command.
+
+# Changelog
+
+## v1.1.0
+- Improved `nao info` readability.
+- It is now possible to set the deck directory to a directory whose path contains multiple consecutive whitespaces through the `naorc` file.
+- Commands can now be shortened to their first letter (i.e. `nao a deck1` and `nao add deck1` are now the same).
+- `Nao` is now licensed under MIT license.
+- Minor bugfixes.
