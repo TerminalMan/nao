@@ -386,7 +386,7 @@ func parseArguments() {
 	}
 
 	switch args[0] {
-	case "add":
+	case "add", "a":
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m the add command need an argument\n")
 			os.Exit(1)
@@ -397,7 +397,7 @@ func parseArguments() {
 		}
 
 		addCard(args[1])
-	case "review":
+	case "review", "r":
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m review need an argument\n")
 			os.Exit(1)
@@ -406,7 +406,7 @@ func parseArguments() {
 		for i := 1; i < len(args); i++ {
 			studyDeck(args[i], false)
 		}
-	case "cram":
+	case "cram", "c":
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m cram need an argument\n")
 			os.Exit(1)
@@ -415,7 +415,7 @@ func parseArguments() {
 		for i := 1; i < len(args); i++ {
 			studyDeck(args[i], true)
 		}
-	case "info":
+	case "info", "i":
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m info need an argument\n")
 			os.Exit(1)
