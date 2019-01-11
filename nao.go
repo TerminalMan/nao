@@ -22,14 +22,14 @@ var DECKDIR string = ""
 type Flashcard struct {
 	front       string
 	back        string
-	efactor     float64
-	duedate     int
+	eFactor     float64
+	dueDate     int
 	repetitions int
 	interval    int
 }
 
 // get then n-th flashcard of the given deck
-func get_card(deck string, n int) Flashcard {
+func getCard(deck string, n int) Flashcard {
 	// set up the file for reading through a scanner
 	deck_f, err := os.Open(deck)
 	if err != nil {
@@ -62,16 +62,16 @@ func get_card(deck string, n int) Flashcard {
 	// extract e-factor
 	for i = 0; line[i] != ';'; i++ {
 	}
-	efactor_s := line[:i]
+	eFactor_s := line[:i]
 	line = line[i+1:]
-	efactor, _ := strconv.ParseFloat(efactor_s, 64)
+	eFactor, _ := strconv.ParseFloat(eFactor_s, 64)
 
 	// extract due date
 	for i = 0; line[i] != ';'; i++ {
 	}
-	duedate_s := line[:i]
+	dueDate_s := line[:i]
 	line = line[i+1:]
-	duedate, _ := strconv.Atoi(duedate_s)
+	dueDate, _ := strconv.Atoi(dueDate_s)
 
 	// extract repetitions
 	for i = 0; line[i] != ';'; i++ {
@@ -84,11 +84,11 @@ func get_card(deck string, n int) Flashcard {
 	interval_s := line
 	interval, _ := strconv.Atoi(interval_s)
 
-	return Flashcard{front, back, efactor, duedate, repetitions, interval}
+	return Flashcard{front, back, eFactor, dueDate, repetitions, interval}
 }
 
 // get the number of cards in the given deck
-func get_deckn(deck string) int {
+func getDeckn(deck string) int {
 	// set up the file for reading through a scanner
 	deck_f, err := os.Open(deck)
 	if err != nil {
@@ -107,7 +107,7 @@ func get_deckn(deck string) int {
 }
 
 // read a single character from stin without a need for the enter key
-func getkey() byte {
+func getKey() byte {
 	// block terminal buffering
 	exec.Command("stty", "-F", "/dev/tty", "cbreak").Run()
 	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
@@ -123,7 +123,7 @@ func getkey() byte {
 
 // print function designed for handling long flashcards in a nice way
 // returns the number of lines printed
-func pretty_print(s1, s2 string) int {
+func prettyPrint(s1, s2 string) int {
 	lines := 0
 	s1n := len(s1)
 
@@ -160,7 +160,7 @@ func pretty_print(s1, s2 string) int {
 }
 
 // clear n lines of output
-func clear_lines(n int) {
+func clearLines(n int) {
 	for i := 0; i < n; i++ {
 		fmt.Printf("\033[1A\r")
 
@@ -173,51 +173,51 @@ func clear_lines(n int) {
 }
 
 // get today's date in unix time
-func gettoday() int {
+func getToday() int {
 	t := int(time.Now().Unix())
 	t -= t % 86400
 	return t
 }
 
 // study card and return the updated (or not, if cramming) card
-func study_card(card Flashcard, cram bool) Flashcard {
+func studyCard(card Flashcard, cram bool) Flashcard {
 	// show the card and gather answer quality
-	lines := pretty_print("Front: ", card.front)
-	getkey()
-	lines += pretty_print("Back:  ", card.back)
+	lines := prettyPrint("Front: ", card.front)
+	getKey()
+	lines += prettyPrint("Back:  ", card.back)
 
 	// if cramming wait for a key and return
 	if cram {
 		fmt.Printf("Press any key to continue...\n")
 		lines += 1
-		getkey()
-		clear_lines(lines)
+		getKey()
+		clearLines(lines)
 		return card
 	}
 
 	fmt.Printf("\033[1mEvaluate your answer:\033[0m \033[0;31m0 1 \033[0;33m2 3 \033[0;32m4 5\033[0m\n")
 	lines += 1
 
-	quality := getkey() - '0'
+	quality := getKey() - '0'
 	for quality > 5 {
-		quality = getkey() - '0'
+		quality = getKey() - '0'
 	}
 
-	clear_lines(lines)
+	clearLines(lines)
 
 	// update e-factor
-	card.efactor += 0.1 - (5-float64(quality))*(0.08+(5-float64(quality))*0.02)
-	if card.efactor > 2.5 {
-		card.efactor = 2.5
-	} else if card.efactor < 1.3 {
-		card.efactor = 1.3
+	card.eFactor += 0.1 - (5-float64(quality))*(0.08+(5-float64(quality))*0.02)
+	if card.eFactor > 2.5 {
+		card.eFactor = 2.5
+	} else if card.eFactor < 1.3 {
+		card.eFactor = 1.3
 	}
 
 	// get today's date. Update due date, interval and repetition number
 	// according to the quality obtained
 	//today := int(time.Now().Unix())
 	//today -= today % 86400
-	today := gettoday()
+	today := getToday()
 
 	if quality >= 3 {
 		if card.repetitions == 0 {
@@ -225,22 +225,22 @@ func study_card(card Flashcard, cram bool) Flashcard {
 		} else if card.repetitions == 1 {
 			card.interval = INTERVAL_1
 		} else {
-			card.interval = int(math.Floor(float64(card.interval) * card.efactor))
+			card.interval = int(math.Floor(float64(card.interval) * card.eFactor))
 		}
 
 		card.repetitions += 1
-		card.duedate = today + card.interval*86400
+		card.dueDate = today + card.interval*86400
 	} else {
 		card.repetitions = 0
 		card.interval = 0
-		card.duedate = today
+		card.dueDate = today
 	}
 
 	return card
 }
 
 // write the card to the file in the right position
-func write_card(deck string, card Flashcard, n int) {
+func writeCard(deck string, card Flashcard, n int) {
 	// set up the file for reading through a scanner
 	deck_f, err := os.Open(deck)
 	if err != nil {
@@ -265,8 +265,8 @@ func write_card(deck string, card Flashcard, n int) {
 	deck_s.Scan()
 	fmt.Fprintf(tmpdeck_f, "%s;", card.front)
 	fmt.Fprintf(tmpdeck_f, "%s;", card.back)
-	fmt.Fprintf(tmpdeck_f, "%f;", card.efactor)
-	fmt.Fprintf(tmpdeck_f, "%d;", card.duedate)
+	fmt.Fprintf(tmpdeck_f, "%f;", card.eFactor)
+	fmt.Fprintf(tmpdeck_f, "%d;", card.dueDate)
 	fmt.Fprintf(tmpdeck_f, "%d;", card.repetitions)
 	fmt.Fprintf(tmpdeck_f, "%d\n", card.interval)
 
@@ -291,39 +291,39 @@ func write_card(deck string, card Flashcard, n int) {
 // cram true: cram the given deck (just study every card)
 // cram false: review the given deck (study due cards updating their
 // local data, also repeat until every card has received a passing score)
-func study_deck(deck string, cram bool) {
+func studyDeck(deck string, cram bool) {
 	// make the support array
 	rand.Seed(time.Now().Unix())
-	deckn := get_deckn(deck)
+	deckn := getDeckn(deck)
 	decka := rand.Perm(deckn)
 
 	// get today's date
 	//today := int(time.Now().Unix())
 	//today -= today % 86400
-	today := gettoday()
+	today := getToday()
 
 	// set failed variable
 	fail := false
 
 	for i := 0; i < deckn; i++ {
-		card := get_card(deck, decka[i])
+		card := getCard(deck, decka[i])
 
-		if card.duedate <= today || cram {
+		if card.dueDate <= today || cram {
 			// review/cram deck
-			card = study_card(card, cram)
+			card = studyCard(card, cram)
 
 			if !cram {
-				write_card(deck, card, decka[i])
+				writeCard(deck, card, decka[i])
 			}
 		}
 
-		if card.duedate <= today && !cram {
+		if card.dueDate <= today && !cram {
 			fail = true
 		}
 	}
 
 	if fail {
-		study_deck(deck, cram)
+		studyDeck(deck, cram)
 	} else if cram {
 		fmt.Printf("You have finished cramming \033[1m%s\033[0m!\n", deck)
 	} else {
@@ -331,7 +331,7 @@ func study_deck(deck string, cram bool) {
 	}
 }
 
-func add_card(deck string) {
+func addCard(deck string) {
 	// read front and back from the user
 	reader := bufio.NewReader(os.Stdin)
 
@@ -346,7 +346,7 @@ func add_card(deck string) {
 	// get toadys date in unix time
 	//today := time.Now().Unix()
 	//today -= today % 86400
-	today := gettoday()
+	today := getToday()
 
 	// add the card to the deck, creating it if it does not exists yet
 	deck_f, _ := os.OpenFile(deck, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -355,8 +355,8 @@ func add_card(deck string) {
 	fmt.Fprintf(deck_f, "%s;%s;2.5;%d;0;0\n", front, back, today)
 }
 
-func info_deck(deck string) {
-	deckn := get_deckn(deck)
+func infoDeck(deck string) {
+	deckn := getDeckn(deck)
 	dueToday := 0
 	dueTomorrow := 0
 	averageEfactor := 0.0
@@ -364,16 +364,16 @@ func info_deck(deck string) {
 	// get today's date
 	//today := int(time.Now().Unix())
 	//today -= today % 86400
-	today := gettoday()
+	today := getToday()
 
 	// get data
 	for i := 0; i < deckn; i++ {
-		card := get_card(deck, i)
+		card := getCard(deck, i)
 
-		averageEfactor += card.efactor
-		if card.duedate <= today {
+		averageEfactor += card.eFactor
+		if card.dueDate <= today {
 			dueToday += 1
-		} else if card.duedate == today+86400 {
+		} else if card.dueDate == today+86400 {
 			dueTomorrow += 1
 		}
 	}
@@ -383,13 +383,13 @@ func info_deck(deck string) {
 
 	// print data
 	fmt.Printf("\033[1m%s\033[0m's infos\n", deck)
-	pretty_print("Card total:   ", strconv.Itoa(deckn))
-	pretty_print("Overall ease: ", strconv.Itoa(overallEase)+"/100")
-	pretty_print("Due today:    ", strconv.Itoa(dueToday))
-	pretty_print("Due tomorrow: ", strconv.Itoa(dueTomorrow))
+	prettyPrint("Card total:   ", strconv.Itoa(deckn))
+	prettyPrint("Overall ease: ", strconv.Itoa(overallEase)+"/100")
+	prettyPrint("Due today:    ", strconv.Itoa(dueToday))
+	prettyPrint("Due tomorrow: ", strconv.Itoa(dueTomorrow))
 }
 
-func parse_arguments() {
+func parseArguments() {
 	args := os.Args[1:]
 
 	// check if a command is given
@@ -409,7 +409,7 @@ func parse_arguments() {
 			fmt.Printf("\033[1;33mWarning:\033[0m extra arguments will be ignored\n")
 		}
 
-		add_card(args[1])
+		addCard(args[1])
 		os.Exit(0)
 	}
 
@@ -421,7 +421,7 @@ func parse_arguments() {
 		}
 
 		for i := 1; i < len(args); i++ {
-			study_deck(args[i], false)
+			studyDeck(args[i], false)
 		}
 
 		os.Exit(0)
@@ -435,7 +435,7 @@ func parse_arguments() {
 		}
 
 		for i := 1; i < len(args); i++ {
-			study_deck(args[i], true)
+			studyDeck(args[i], true)
 		}
 
 		os.Exit(0)
@@ -449,7 +449,7 @@ func parse_arguments() {
 		}
 
 		for i := 1; i < len(args); i++ {
-			info_deck(args[i])
+			infoDeck(args[i])
 			if i != len(args)-1 {
 				fmt.Printf("\n")
 			}
@@ -465,7 +465,7 @@ func parse_arguments() {
 
 // read the config file and set up variables accordingly, returing error when
 // unxpected things happen
-func parse_config(configfile_f *os.File) {
+func parseConfig(configfile_f *os.File) {
 	configfile_s := bufio.NewScanner(configfile_f)
 	i := 0
 
@@ -535,7 +535,7 @@ func init() {
 	configfile_f, err := os.Open(user.HomeDir + "/.config/nao/naorc")
 	if err == nil {
 		defer configfile_f.Close()
-		parse_config(configfile_f)
+		parseConfig(configfile_f)
 	}
 
 	// expand '~', check if the path is absolute then check if DECKDIR is
@@ -548,11 +548,11 @@ func init() {
 		os.Exit(1)
 	}
 
-	deckdirstats, err := os.Stat(DECKDIR)
+	deckdirStats, err := os.Stat(DECKDIR)
 	if err != nil {
 		fmt.Printf("\033[1;31mError:\033[0m \"%s\" no such directory\n", DECKDIR)
 		os.Exit(1)
-	} else if deckdirstats.IsDir() == false {
+	} else if deckdirStats.IsDir() == false {
 		fmt.Printf("\033[1;31mError:\033[0m \"%s\" is not a directory\n", DECKDIR)
 		os.Exit(1)
 	}
@@ -561,7 +561,7 @@ func init() {
 }
 
 func main() {
-	parse_arguments()
+	parseArguments()
 
 	os.Exit(0)
 }
