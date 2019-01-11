@@ -385,8 +385,8 @@ func parseArguments() {
 		os.Exit(1)
 	}
 
-	// add command
-	if args[0] == "add" {
+	switch args[0] {
+	case "add":
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m the add command need an argument\n")
 			os.Exit(1)
@@ -397,11 +397,7 @@ func parseArguments() {
 		}
 
 		addCard(args[1])
-		os.Exit(0)
-	}
-
-	// review command
-	if args[0] == "review" {
+	case "review":
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m review need an argument\n")
 			os.Exit(1)
@@ -410,12 +406,7 @@ func parseArguments() {
 		for i := 1; i < len(args); i++ {
 			studyDeck(args[i], false)
 		}
-
-		os.Exit(0)
-	}
-
-	// cram command
-	if args[0] == "cram" {
+	case "cram":
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m cram need an argument\n")
 			os.Exit(1)
@@ -424,12 +415,7 @@ func parseArguments() {
 		for i := 1; i < len(args); i++ {
 			studyDeck(args[i], true)
 		}
-
-		os.Exit(0)
-	}
-
-	// info command
-	if args[0] == "info" {
+	case "info":
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m info need an argument\n")
 			os.Exit(1)
@@ -441,13 +427,12 @@ func parseArguments() {
 				fmt.Printf("\n")
 			}
 		}
-
-		os.Exit(0)
+	default:
+		fmt.Printf("\033[1;31mError:\033[0m unrecognized command \"%s\"\n", args[0])
+		os.Exit(1)
 	}
 
-	// if nothing works
-	fmt.Printf("\033[1;31mError:\033[0m unrecognized command \"%s\"\n", args[0])
-	os.Exit(1)
+	os.Exit(0)
 }
 
 // read the config file and set up variables accordingly, returing error when
