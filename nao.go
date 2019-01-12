@@ -470,6 +470,13 @@ func parseConfig(configfile_f *os.File) {
 			}
 
 			INTERVAL1, _ = strconv.Atoi(words[1])
+		case "maxinterval":
+			if len(words) == 1 {
+				fmt.Printf("\033[1;31mError:\033[0m no argument provided on line %d of naorc\n", i)
+				os.Exit(1)
+			}
+
+			MAXINTERVAL, _ = strconv.Atoi(words[1])
 		case "linelength":
 			if len(words) == 1 {
 				fmt.Printf("\033[1;31mError:\033[0m no argument provided on line %d of naorc\n", i)
@@ -497,13 +504,6 @@ func parseConfig(configfile_f *os.File) {
 			}
 
 			DECKDIR = configfile_s.Text()[j+1:]
-		case "maxinterval":
-			if len(words) == 1 {
-				fmt.Printf("\033[1;31mError:\033[0m no argument provided on line %d of naorc\n", i)
-				os.Exit(1)
-			}
-
-			MAXINTERVAL, _ = strconv.Atoi(words[1])
 		default:
 			fmt.Printf("\033[1;31mError:\033[0m unrecognized option \"%s\" on line %d of naorc\n", words[0], i)
 			os.Exit(1)
