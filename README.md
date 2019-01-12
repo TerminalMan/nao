@@ -17,6 +17,9 @@ If you want to install a particular version or, for some reason, you wish to use
 
 # Changelog
 
+## v1.2.0
+- New configurable option `maxinterval` that set the maximum interval in days between repetitions of the same flashcard. 
+
 ## v1.1.0
 - Improved `nao info` readability.
 - It is now possible to set the deck directory to a directory whose path contains multiple consecutive whitespaces through the `naorc` file.
