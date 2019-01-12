@@ -195,6 +195,8 @@ func studyCard(card Flashcard, cram bool) Flashcard {
 		return card
 	}
 
+	// if not cramming get the user to evaluate his answer and then
+	// update the flashcard data
 	fmt.Printf("\033[1mEvaluate your answer:\033[0m \033[0;31m0 1 \033[0;33m2 3 \033[0;32m4 5\033[0m\n")
 	lines += 1
 
