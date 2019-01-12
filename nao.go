@@ -14,8 +14,8 @@ import (
 )
 
 // global variables
-var INTERVAL_0 int = 1
-var INTERVAL_1 int = 2
+var INTERVAL0 int = 1
+var INTERVAL1 int = 2
 var MAXINTERVAL int = 0
 var LINELENGTH int = 79
 var DECKDIR string = ""
@@ -220,9 +220,9 @@ func studyCard(card Flashcard, cram bool) Flashcard {
 
 	if quality >= 3 {
 		if card.repetitions == 0 {
-			card.interval = INTERVAL_0
+			card.interval = INTERVAL0
 		} else if card.repetitions == 1 {
-			card.interval = INTERVAL_1
+			card.interval = INTERVAL1
 		} else {
 			card.interval = int(math.Floor(float64(card.interval) * card.eFactor))
 			if card.interval >= MAXINTERVAL && MAXINTERVAL != 0 {
@@ -462,14 +462,14 @@ func parseConfig(configfile_f *os.File) {
 				os.Exit(1)
 			}
 
-			INTERVAL_0, _ = strconv.Atoi(words[1])
+			INTERVAL0, _ = strconv.Atoi(words[1])
 		case "interval1":
 			if len(words) == 1 {
 				fmt.Printf("\033[1;31mError:\033[0m no argument provided on line %d of naorc\n", i)
 				os.Exit(1)
 			}
 
-			INTERVAL_1, _ = strconv.Atoi(words[1])
+			INTERVAL1, _ = strconv.Atoi(words[1])
 		case "linelength":
 			if len(words) == 1 {
 				fmt.Printf("\033[1;31mError:\033[0m no argument provided on line %d of naorc\n", i)
