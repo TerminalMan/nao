@@ -16,7 +16,7 @@ import (
 // global variables
 var INTERVAL_0 int = 1
 var INTERVAL_1 int = 2
-var MAXINTERVAL int = 10
+var MAXINTERVAL int = 0
 var LINELENGTH int = 79
 var DECKDIR string = ""
 
@@ -225,7 +225,7 @@ func studyCard(card Flashcard, cram bool) Flashcard {
 			card.interval = INTERVAL_1
 		} else {
 			card.interval = int(math.Floor(float64(card.interval) * card.eFactor))
-			if card.interval >= MAXINTERVAL {
+			if card.interval >= MAXINTERVAL && MAXINTERVAL != 0 {
 				card.interval = MAXINTERVAL
 			}
 		}
