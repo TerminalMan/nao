@@ -1,4 +1,4 @@
-.TH Nao 1 nao\-1.1.0
+.TH Nao 1 nao\-1.2.0dev
 .SH NAME
 nao \- cli space repetition flashcard program
 .SH SYNOPSIS
@@ -26,6 +26,9 @@ Interval of days from first correct review of a card to the second. The default 
 .TP
 \fBinterval1\fR \fInumber\fR
 Interval of days from second correct review of a card to the third. The default value is 2.
+.TP
+\fBmaxinterval\fR \fInumber\fR
+Maximum interval of days between repetitions of the same flashcard. The default value is 0 which means that no check is done on the length of the repetition interval (i.e. it can become arbitrary large, depending on the user's performances with the card).
 .TP
 \fBlinelength\fR \fInumber\fR
 Number of characters before linebreak. It must be an odd number, if even Nao will add 1 to it. Default value 79.
