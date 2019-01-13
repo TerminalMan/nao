@@ -19,6 +19,7 @@ var INTERVAL1 int = 2
 var MAXINTERVAL int = 0
 var LINELENGTH int = 79
 var DECKDIR string = ""
+var NOPROMPT bool = false
 
 type Flashcard struct {
 	front       string
@@ -334,11 +335,15 @@ func addCard(deck string) {
 	// read front and back from the user
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Printf("\033[1mFront:\033[0m ")
+	if !NOPROMPT {
+		fmt.Printf("\033[1mFront:\033[0m ")
+	}
 	front, _ := reader.ReadString('\n')
 	front = front[:len(front)-1]
 
-	fmt.Printf("\033[1mBack:\033[0m  ")
+	if !NOPROMPT {
+		fmt.Printf("\033[1mBack:\033[0m  ")
+	}
 	back, _ := reader.ReadString('\n')
 	back = back[:len(back)-1]
 
@@ -504,6 +509,8 @@ func parseConfig(configfile_f *os.File) {
 			}
 
 			DECKDIR = configfile_s.Text()[j+1:]
+		case "noprompt":
+			NOPROMPT = true
 		default:
 			fmt.Printf("\033[1;31mError:\033[0m unrecognized option \"%s\" on line %d of naorc\n", words[0], i)
 			os.Exit(1)
