@@ -331,29 +331,13 @@ func studyDeck(deck string, cram bool) {
 	}
 }
 
-func addCard(deck string) {
-	// read front and back from the user
-	reader := bufio.NewReader(os.Stdin)
-
-	if !NOPROMPT {
-		fmt.Printf("\033[1mFront:\033[0m ")
-	}
-	front, _ := reader.ReadString('\n')
-	front = front[:len(front)-1]
-
-	if !NOPROMPT {
-		fmt.Printf("\033[1mBack:\033[0m  ")
-	}
-	back, _ := reader.ReadString('\n')
-	back = back[:len(back)-1]
-
-	today := getToday()
+func addCard(deck string, front string, back string) {
 
 	// add the card to the deck, creating it if it does not exists yet
 	deck_f, _ := os.OpenFile(deck, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer deck_f.Close()
 
-	fmt.Fprintf(deck_f, "%s;%s;2.5;%d;0;0\n", front, back, today)
+	fmt.Fprintf(deck_f, "%s;%s;2.5;%d;0;0\n", front, back, getToday())
 }
 
 func infoDeck(deck string) {
@@ -398,16 +382,16 @@ func parseArguments() {
 
 	switch args[0] {
 	case "add", "a":
-		if len(args) < 2 {
+		if len(args) < 4 {
 			fmt.Printf("\033[1;31mError:\033[0m the add command need an argument\n")
 			os.Exit(1)
 		}
 
-		if len(args) > 2 {
+		if len(args) > 4 {
 			fmt.Printf("\033[1;33mWarning:\033[0m extra arguments will be ignored\n")
 		}
 
-		addCard(args[1])
+		addCard(args[1], args[2], args[3])
 	case "review", "r":
 		if len(args) < 2 {
 			fmt.Printf("\033[1;31mError:\033[0m review need an argument\n")
