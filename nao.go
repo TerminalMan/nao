@@ -216,8 +216,6 @@ func studyCard(card Flashcard, cram bool) Flashcard {
 		card.eFactor = 1.3
 	}
 
-	today := getToday()
-
 	if quality >= 3 {
 		if card.repetitions == 0 {
 			card.interval = INTERVAL0
@@ -231,11 +229,11 @@ func studyCard(card Flashcard, cram bool) Flashcard {
 		}
 
 		card.repetitions += 1
-		card.dueDate = today + card.interval*86400
+		card.dueDate = getToday() + card.interval*86400
 	} else {
 		card.repetitions = 0
 		card.interval = 0
-		card.dueDate = today
+		card.dueDate = getToday()
 	}
 
 	return card
