@@ -332,7 +332,6 @@ func studyDeck(deck string, cram bool) {
 }
 
 func addCard(deck string, front string, back string) {
-
 	// add the card to the deck, creating it if it does not exists yet
 	deck_f, _ := os.OpenFile(deck, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	defer deck_f.Close()
@@ -383,7 +382,7 @@ func parseArguments() {
 	switch args[0] {
 	case "add", "a":
 		if len(args) < 4 {
-			fmt.Printf("\033[1;31mError:\033[0m the add command need an argument\n")
+			fmt.Printf("\033[1;31mError:\033[0m the add command need 3 arguments\n")
 			os.Exit(1)
 		}
 
