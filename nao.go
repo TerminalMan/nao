@@ -19,7 +19,6 @@ var INTERVAL1 int = 2
 var MAXINTERVAL int = 0
 var LINELENGTH int = 79
 var DECKDIR string = ""
-var NOPROMPT bool = false
 
 type Flashcard struct {
 	front       string
@@ -492,8 +491,6 @@ func parseConfig(configfile_f *os.File) {
 			}
 
 			DECKDIR = configfile_s.Text()[j+1:]
-		case "noprompt":
-			NOPROMPT = true
 		default:
 			fmt.Printf("\033[1;31mError:\033[0m unrecognized option \"%s\" on line %d of naorc\n", words[0], i)
 			os.Exit(1)
