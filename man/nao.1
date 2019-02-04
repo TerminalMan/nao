@@ -7,9 +7,8 @@ nao \- cli space repetition flashcard program
 .SH COMMANDS
 Underlined arguments to the following commands are mandatory. Square brackets represent that multiple arguments can be fed to the command. All commands can be shortened to their first letter (i.e. "a" can be used instead of "add").
 .TP
-\fBadd\fR \fIDECK\fR
-Add a new flashcard to \fIDECK\fR. If \fIDECK\fR does not exists yet it will be created.
-(e.g. "nao add $DECKNAME $FRONT $BACK")
+\fBadd\fR \fIDECK\fR \fIFRONT\fR \fIBACK\fR
+Add a new flashcard with \fIFRONT\fR as front matter (question) and \fIBACK\fR as back matter (answer) to \fIDECK\fR. If \fIDECK\fR does not exists yet it will be created.
 .TP
 \fBreview\fR [\fIDECK\fR]
 Review [\fIDECK\fR] in the given order.
