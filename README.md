@@ -17,6 +17,10 @@ If you want to install a particular version or, for some reason, you wish to use
 
 # Changelog
 
+## v1.3.0
+- `nao add` now works differently and should be easier to include in scripts.
+  - As a consequence of the point above the `noprompt` option has been removed and will not be recognized by `Nao` anymore.
+
 ## v1.2.0
 - New configurable option `maxinterval` that set the maximum interval in days between repetitions of the same flashcard. 
 - New configurable option `noprompt` that stops `Nao` from prompting for input while doing `nao add`. Useful for piping into `nao add`.
