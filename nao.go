@@ -6,7 +6,6 @@ import (
 	"math"
 	"math/rand"
 	"os"
-	"os/exec"
 	"os/user"
 	"strconv"
 	"strings"
@@ -107,38 +106,36 @@ func getDeckn(deck string) int {
 	return i
 }
 
-// read a single character from stin without a need for the enter key
-func getKey() byte {
-	// block terminal buffering
-	exec.Command("stty", "-F", "/dev/tty", "cbreak").Run()
-	exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
+// read a single character from stin
+func getKey(prompt string) byte {
+	// prompt
+	fmt.Printf("%s ", prompt)
 
-	// get the character
-	var c []byte = make([]byte, 1)
-	os.Stdin.Read(c)
+	// read
+	reader := bufio.NewReader(os.Stdin)
+	char, err := reader.ReadByte()
+	if err != nil {
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
 
-	// reset terminal properties and return
-	exec.Command("stty", "-F", "/dev/tty", "sane").Run()
-	return c[0]
+	return char
 }
 
 // print function designed for handling long flashcards in a nice way
-// returns the number of lines printed
-func prettyPrint(s1, s2 string) int {
-	lines := 0
+func prettyPrint(s1, s2 string) {
 	s1n := len(s1)
 
 	fmt.Printf("\033[1m%s\033[0m", s1)
 
 	if len(s2) <= LINELENGTH-s1n {
-		fmt.Printf("%s\n", s2)
+		fmt.Printf("%s", s2)
 		s2 = ""
 	} else {
 		ss := s2[:LINELENGTH-s1n]
 		s2 = s2[LINELENGTH-s1n:]
 		fmt.Printf("%s\n", ss)
 	}
-	lines += 1
 
 	for len(s2) > 0 {
 		for i := 0; i < s1n; i++ {
@@ -146,31 +143,14 @@ func prettyPrint(s1, s2 string) int {
 		}
 
 		if len(s2) <= LINELENGTH-s1n {
-			fmt.Printf("%s\n", s2)
+			fmt.Printf("%s", s2)
 			s2 = ""
 		} else {
 			ss := s2[:LINELENGTH-s1n]
 			s2 = s2[LINELENGTH-s1n:]
 			fmt.Printf("%s\n", ss)
 		}
-
-		lines += 1
 	}
-
-	return lines
-}
-
-// clear n lines of output
-func clearLines(n int) {
-	for i := 0; i < n; i++ {
-		fmt.Printf("\033[1A\r")
-
-		for j := 0; j < LINELENGTH; j++ {
-			fmt.Printf(" ")
-		}
-	}
-
-	fmt.Printf("\r")
 }
 
 // get today's date in unix time
@@ -183,30 +163,23 @@ func getToday() int {
 // study card and return the updated (or not, if cramming) card
 func studyCard(card Flashcard, cram bool) Flashcard {
 	// show the card and gather answer quality
-	lines := prettyPrint("Front: ", card.front)
-	getKey()
-	lines += prettyPrint("Back:  ", card.back)
+	prettyPrint("Front: ", card.front)
+	getKey("")
+	prettyPrint("Back:  ", card.back)
+	fmt.Printf("\n")
 
-	// if cramming wait for a key and return
+	// if cramming wait for enter and return
 	if cram {
-		fmt.Printf("Press any key to continue...\n")
-		lines += 1
-		getKey()
-		clearLines(lines)
+		getKey("")
 		return card
 	}
 
 	// if not cramming get the user to evaluate his answer and then
 	// update the flashcard data
-	fmt.Printf("\033[1mEvaluate your answer:\033[0m \033[0;31m0 1 \033[0;33m2 3 \033[0;32m4 5\033[0m\n")
-	lines += 1
-
-	quality := getKey() - '0'
-	for quality > 5 {
-		quality = getKey() - '0'
+	quality := getKey("\033[1mEvaluate your answer [0-5]:\033[0m") - '0'
+	for quality > 5 || quality < 0 {
+		quality = getKey("\033[1mEvaluate your answer [0-5]:\033[0m") - '0'
 	}
-
-	clearLines(lines)
 
 	// update e-factor
 	card.eFactor += 0.1 - (5-float64(quality))*(0.08+(5-float64(quality))*0.02)
