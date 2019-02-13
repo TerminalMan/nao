@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"go-runewidth"
 )
 
 // global variables
@@ -123,34 +124,31 @@ func getKey(prompt string) byte {
 }
 
 // print function designed for handling long flashcards in a nice way
-func prettyPrint(s1, s2 string) {
-	s1n := len(s1)
+func prettyPrint(s1, s2 string) int {
+	lines := 1
+	s2 = strings.Replace(s2, "<br>", "\n", -1)
 
 	fmt.Printf("\033[1m%s\033[0m", s1)
 
-	if len(s2) <= LINELENGTH-s1n {
-		fmt.Printf("%s", s2)
-		s2 = ""
-	} else {
-		ss := s2[:LINELENGTH-s1n]
-		s2 = s2[LINELENGTH-s1n:]
-		fmt.Printf("%s\n", ss)
-	}
-
-	for len(s2) > 0 {
-		for i := 0; i < s1n; i++ {
-			fmt.Printf(" ")
+	col := len(s1)+1
+	for _, rune := range s2 {
+		fmt.Printf("%c", rune)
+		col += runewidth.RuneWidth(rune)
+		if rune == '\n' {
+			fmt.Printf("       ")
+			col = len(s1)+1
+			lines++
 		}
 
-		if len(s2) <= LINELENGTH-s1n {
-			fmt.Printf("%s", s2)
-			s2 = ""
-		} else {
-			ss := s2[:LINELENGTH-s1n]
-			s2 = s2[LINELENGTH-s1n:]
-			fmt.Printf("%s\n", ss)
+		if col > LINELENGTH {
+			fmt.Printf("\n")
+			fmt.Printf("       ")
+			col = len(s1)+1
+			lines++
 		}
 	}
+	fmt.Printf("\n")
+	return lines
 }
 
 // get today's date in unix time
