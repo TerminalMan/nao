@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"go-runewidth"
+	"github.com/mattn/go-runewidth"
 )
 
 // global variables
@@ -125,7 +125,8 @@ func getKey(prompt string) byte {
 
 // print function designed for handling long flashcards in a nice way
 func prettyPrint(s1, s2 string) int {
-	lines := 1
+	lines := 0
+	s1len := len(s1)
 	s2 = strings.Replace(s2, "<br>", "\n", -1)
 
 	fmt.Printf("\033[1m%s\033[0m", s1)
@@ -135,19 +136,18 @@ func prettyPrint(s1, s2 string) int {
 		fmt.Printf("%c", rune)
 		col += runewidth.RuneWidth(rune)
 		if rune == '\n' {
-			fmt.Printf("       ")
-			col = len(s1)+1
+			fmt.Printf("%s",strings.Repeat(" ",s1len))
+			col = s1len
 			lines++
 		}
 
 		if col > LINELENGTH {
 			fmt.Printf("\n")
-			fmt.Printf("       ")
-			col = len(s1)+1
+			fmt.Printf("%s",strings.Repeat(" ",s1len))
+			col = s1len
 			lines++
 		}
 	}
-	fmt.Printf("\n")
 	return lines
 }
 
